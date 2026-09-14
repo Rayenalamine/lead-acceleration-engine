@@ -1,0 +1,45 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ai-lead-acceleration-engine
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/lead_engine}
+    username: ${DB_USERNAME:leadengine}
+    password: ${DB_PASSWORD:leadengine}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+    show-sql: false
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+lead-engine:
+  n8n:
+    webhook-url: ${N8N_WEBHOOK_URL:http://localhost:5678/webhook/lead-qualify}
+    connect-timeout-ms: 3000
+    # LLM workflows can take longer if the webhook waits for completion
+    response-timeout-ms: 120000
+  callback-base-url: ${CALLBACK_BASE_URL:http://host.docker.internal:8081}
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+  demo:
+    # Set DEMO_MODE=false when running live n8n docker stack
+    enabled: ${DEMO_MODE:true}
+    delay-ms: 4000
+
+logging:
+  level:
+    com.leadengine: INFO
+    org.springframework.web: INFO

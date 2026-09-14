@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lead-engine-db
+    environment:
+      POSTGRES_DB: lead_engine
+      POSTGRES_USER: leadengine
+      POSTGRES_PASSWORD: leadengine
+    ports:
+      - "5433:5432"
+    volumes:
+      - lead_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leadengine -d lead_engine"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: lead-engine-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=UTC
+      - N8N_SECURE_COOKIE=false
+      - N8N_USER_MANAGEMENT_DISABLED=true
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    volumes:
+      - lead_n8n_data:/home/node/.n8n
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+
+  backend:
+    build: ./backend
+    container_name: lead-engine-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/lead_engine
+      DB_USERNAME: leadengine
+      DB_PASSWORD: leadengine
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/lead-qualify
+      CALLBACK_BASE_URL: http://backend:8081
+      DEMO_MODE: "false"
+    ports:
+      - "8081:8081"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  lead_pg_data:
+  lead_n8n_data:

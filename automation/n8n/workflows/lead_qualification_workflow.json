@@ -1,0 +1,162 @@
+{
+  "name": "Enterprise Lead Acceleration & Qualification Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "leads",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "Inbound Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"ACCEPTED\",\n  \"message\": \"Lead payload received and queued for asynchronous AI qualification.\",\n  \"timestamp\": \"={{ $now.toISOString() }}\"\n}",
+        "options": {
+          "responseCode": 202
+        }
+      },
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "Async 202 Ack",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [340, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || {};\nconst rawEmail = (body.email || '').trim().toLowerCase();\nconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\nconst isValidEmail = emailRegex.test(rawEmail);\nlet domain = '';\nif (isValidEmail) {\n  domain = rawEmail.split('@')[1];\n}\n\nconst genericDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'proton.me'];\nconst isCorporate = domain ? !genericDomains.includes(domain) : false;\n\nreturn [{\n  json: {\n    leadId: body.leadId || body.id || null,\n    name: (body.name || '').trim(),\n    email: rawEmail,\n    company: (body.company || '').trim(),\n    message: (body.message || '').trim(),\n    domain: domain,\n    isCorporate: isCorporate,\n    isValidEmail: isValidEmail,\n    ingestedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "33333333-3333-3333-3333-333333333333",
+      "name": "Sanitizer & Extractor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [340, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValidEmail }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "44444444-4444-4444-4444-444444444444",
+      "name": "Filter Invalid Leads",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [560, 400]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "responseFormat": "json_object",
+          "temperature": 0.1
+        },
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an Enterprise AI Lead Qualification Specialist. Evaluate inbound business leads and respond STRICTLY with a structured JSON object. Do not include markdown formatting, conversational filler, or unparsed text."
+            },
+            {
+              "role": "user",
+              "content": "=Analyze the following B2B lead payload and return JSON matching this exact schema:\n{\n  \"lead_score\": number (0-100),\n  \"priority_tier\": string (\"LOW\" | \"MEDIUM\" | \"HIGH\" | \"URGENT\"),\n  \"fit_reasoning\": string (concise 2-sentence rationale),\n  \"recommended_action\": string (\"AUTO_REJECT\" | \"NURTURE\" | \"ASSIGN_AE\" | \"IMMEDIATE_OUTREACH\")\n}\n\nLead Payload:\nName: {{ $json.name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nCorporate Email: {{ $json.isCorporate }}\nDomain: {{ $json.domain }}\nInquiry Message: {{ $json.message }}"
+            }
+          ]
+        }
+      },
+      "id": "77777777-7777-7777-7777-777777777777",
+      "name": "AI Lead Evaluation Engine",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [800, 380]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawContent = $input.first().json.message?.content || $input.first().json.text || '{}';\nlet parsedAi = {};\n\ntry {\n  parsedAi = typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;\n} catch (e) {\n  parsedAi = {\n    lead_score: 0,\n    priority_tier: 'LOW',\n    fit_reasoning: 'Failed to parse AI evaluation output.',\n    recommended_action: 'AUTO_REJECT'\n  };\n}\n\nconst metadata = $('Sanitizer & Extractor').first().json;\n\nreturn [{\n  json: {\n    leadId: metadata.leadId,\n    email: metadata.email,\n    name: metadata.name,\n    company: metadata.company,\n    isCorporate: metadata.isCorporate,\n    qualification: {\n      score: parsedAi.lead_score ?? 0,\n      priorityTier: parsedAi.priority_tier || 'LOW',\n      reasoning: parsedAi.fit_reasoning || 'No evaluation rationale provided.',\n      recommendedAction: parsedAi.recommended_action || 'NURTURE'\n    },\n    evaluatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "88888888-8888-8888-8888-888888888888",
+      "name": "Format & Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1020, 380]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.CALLBACK_BASE_URL || 'http://backend:8081' }}/api/v1/leads/callback",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "id": "99999999-9999-9999-9999-999999999999",
+      "name": "Dispatch Spring Boot Callback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1240, 380]
+    }
+  ],
+  "connections": {
+    "Inbound Lead Webhook": {
+      "main": [
+        [
+          { "node": "Async 202 Ack", "type": "main", "index": 0 },
+          { "node": "Sanitizer & Extractor", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sanitizer & Extractor": {
+      "main": [
+        [
+          { "node": "Filter Invalid Leads", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Filter Invalid Leads": {
+      "main": [
+        [
+          { "node": "AI Lead Evaluation Engine", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "AI Lead Evaluation Engine": {
+      "main": [
+        [
+          { "node": "Format & Normalize Payload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Format & Normalize Payload": {
+      "main": [
+        [
+          { "node": "Dispatch Spring Boot Callback", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
