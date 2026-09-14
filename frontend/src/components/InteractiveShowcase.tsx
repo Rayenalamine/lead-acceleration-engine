@@ -5,7 +5,6 @@ import {
   Mail,
   Play,
   RotateCcw,
-  Smartphone,
   Sparkles,
   Table,
 } from 'lucide-react';
@@ -82,10 +81,10 @@ export function InteractiveShowcase() {
         </div>
       </div>
 
-      {/* Grid: AI Neural Scanner & 3D iPhone Popup */}
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* Grid: AI Neural Scanner & Real-Looking 3D iPhone Pro */}
+      <div className="grid gap-6 md:grid-cols-2 items-start">
         {/* Left: AI Neural Brain Scanner Simulation */}
-        <div className="panel flex flex-col justify-between p-6 border-slate-700/60 bg-ink-950/60">
+        <div className="panel flex flex-col justify-between p-6 border-slate-700/60 bg-ink-950/60 min-h-[520px]">
           <div>
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2 font-mono text-xs font-semibold text-indigo-400 uppercase">
@@ -97,51 +96,52 @@ export function InteractiveShowcase() {
               </span>
             </div>
 
-            <div className="mt-4 space-y-3">
-              <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-3.5 text-xs text-slate-300 space-y-1">
+            <div className="mt-4 space-y-4">
+              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 text-xs text-slate-300 space-y-1.5 shadow-inner">
                 <div className="flex justify-between text-slate-400 font-mono text-[10px]">
                   <span>Lead Subject</span>
-                  <span>Budget: ${leadBudget.toLocaleString()}</span>
+                  <span className="font-semibold text-emerald-400">Budget: ${leadBudget.toLocaleString()}</span>
                 </div>
-                <p className="font-semibold text-white">{leadName}</p>
-                <p className="text-slate-400 truncate">{leadScope}</p>
+                <p className="font-semibold text-white text-sm">{leadName}</p>
+                <p className="text-slate-400 leading-relaxed">{leadScope}</p>
               </div>
 
               {/* Neural Scanning Animation State */}
               {demoState === 'IDLE' && (
-                <div className="rounded-lg border border-dashed border-slate-800 p-8 text-center text-xs text-slate-500">
-                  Click <strong>▶ Launch Live Automation Showcase</strong> above to trigger AI qualification scanning.
+                <div className="rounded-xl border border-dashed border-slate-800 p-12 text-center text-xs text-slate-500 space-y-2">
+                  <Cpu className="h-8 w-8 mx-auto text-slate-700 animate-pulse" />
+                  <p>Click <strong>▶ Launch Live Automation Showcase</strong> above to trigger AI qualification scanning.</p>
                 </div>
               )}
 
               {demoState === 'SCANNING' && (
-                <div className="space-y-3 rounded-lg border border-indigo-500/40 bg-indigo-500/10 p-4">
+                <div className="space-y-4 rounded-xl border border-indigo-500/40 bg-indigo-500/10 p-5 backdrop-blur-md">
                   <div className="flex items-center justify-between text-xs text-indigo-300 font-mono">
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-2 font-semibold">
                       <Sparkles className="h-4 w-4 animate-spin text-cyan-400" />
                       Analyzing B2B Scope & Budget Intent...
                     </span>
                     <span>Scanning...</span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-3/4 animate-pulse bg-gradient-to-r from-indigo-500 to-cyan-400" />
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div className="h-full w-4/5 animate-pulse bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400" />
                   </div>
                 </div>
               )}
 
               {(demoState === 'IPHONE_NOTIF' || demoState === 'SHEET_SYNC' || demoState === 'COMPLETE') && (
-                <div className="rounded-lg border border-emerald-500/50 bg-emerald-500/10 p-4 space-y-2">
+                <div className="rounded-xl border border-emerald-500/50 bg-emerald-500/10 p-5 space-y-2.5 shadow-lg">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-emerald-300 font-semibold text-sm">
-                      <BadgeCheck className="h-5 w-5 text-emerald-400" />
+                    <div className="flex items-center gap-2 text-emerald-300 font-semibold text-base">
+                      <BadgeCheck className="h-6 w-6 text-emerald-400" />
                       <span>QUALIFIED (Score: 92/100)</span>
                     </div>
-                    <span className="font-mono text-[10px] uppercase bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">
+                    <span className="font-mono text-[10px] uppercase bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-md font-bold">
                       Passed & Verified
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300">
-                    AI Intent Match: <strong>High B2B Enterprise Fit</strong>. Budget meets $5k threshold.
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    AI Intent Match: <strong>High B2B Enterprise Fit</strong>. Budget meets $5,000 threshold. Executive calendar booking triggered.
                   </p>
                 </div>
               )}
@@ -149,57 +149,83 @@ export function InteractiveShowcase() {
           </div>
         </div>
 
-        {/* Right: 3D iPhone Popup Screen Simulation */}
-        <div className="panel flex flex-col justify-between p-6 border-slate-700/60 bg-ink-950/60">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center gap-2 font-mono text-xs font-semibold text-pink-400 uppercase">
-              <Smartphone className="h-4 w-4 text-pink-400" />
-              <span>3D Smartphone Notification Center</span>
+        {/* Right: Hyper-Realistic CSS iPhone 15 Pro Device Frame */}
+        <div className="panel flex flex-col items-center justify-center p-6 border-slate-700/60 bg-ink-950/60 min-h-[520px]">
+          {/* Authentic iPhone 15 Pro Mockup */}
+          <div className="relative w-[280px] h-[480px] rounded-[44px] bg-slate-950 border-[9px] border-slate-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col justify-between p-3 select-none">
+            {/* Glossy Reflective Glass Edge */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-30" />
+
+            {/* Top Status Bar & Dynamic Island */}
+            <div className="relative z-20 flex items-center justify-between px-3 pt-1 text-[11px] font-semibold text-white">
+              <span>9:41</span>
+              {/* Dynamic Island */}
+              <div className="h-4 w-20 rounded-full bg-black border border-white/10 flex items-center justify-end px-1.5 shadow-inner">
+                <span className="h-2 w-2 rounded-full bg-indigo-950 border border-indigo-500/50" />
+              </div>
+              <div className="flex items-center gap-1 text-[10px]">
+                <span>5G</span>
+                <span className="h-2.5 w-4 rounded-sm border border-white bg-white/90" />
+              </div>
             </div>
-            <span className="rounded bg-pink-500/20 px-2 py-0.5 font-mono text-[10px] text-pink-300">
-              iOS Push Alerts
-            </span>
-          </div>
 
-          <div className="mt-4 flex flex-col items-center justify-center min-h-[220px]">
-            {demoState === 'IDLE' || demoState === 'SCANNING' ? (
-              <div className="text-center text-xs text-slate-500 space-y-2">
-                <Smartphone className="h-10 w-10 mx-auto text-slate-700 animate-bounce" />
-                <p>Waiting for AI qualification outcome to trigger mobile push notifications...</p>
+            {/* iOS Lock Screen Content */}
+            <div className="relative z-20 flex-1 flex flex-col justify-between pt-4 pb-2 px-1">
+              {/* iOS Lock Screen Time & Date */}
+              <div className="text-center space-y-0.5">
+                <p className="text-[10px] font-medium text-slate-300 uppercase tracking-widest">Monday, September 14</p>
+                <p className="text-4xl font-extralight text-white tracking-tight font-display">9:41</p>
               </div>
-            ) : (
-              <div className="w-full space-y-3 transition-all duration-500 transform scale-100 animate-in fade-in slide-in-from-bottom-4">
-                {/* Notification 1: Executive Calendar Meeting */}
-                <div className="rounded-xl border border-slate-700/70 bg-slate-900/90 p-3.5 shadow-2xl backdrop-blur-xl space-y-1">
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                    <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                      <Calendar className="h-3.5 w-3.5" />
-                      CALENDAR AUTO-BOOKED
-                    </span>
-                    <span>now</span>
-                  </div>
-                  <p className="text-xs font-bold text-white">Discovery Call: {leadName}</p>
-                  <p className="text-[11px] text-slate-300">
-                    Scheduled for Tomorrow at 10:00 AM (Budget: ${leadBudget.toLocaleString()})
-                  </p>
-                </div>
 
-                {/* Notification 2: VIP Auto-Responder Email */}
-                <div className="rounded-xl border border-slate-700/70 bg-slate-900/90 p-3.5 shadow-2xl backdrop-blur-xl space-y-1">
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                    <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-                      <Mail className="h-3.5 w-3.5" />
-                      EMAIL DISPATCHED
-                    </span>
-                    <span>now</span>
+              {/* iOS Lock Screen Push Notification Center */}
+              <div className="space-y-2.5 my-auto">
+                {demoState === 'IDLE' || demoState === 'SCANNING' ? (
+                  <div className="rounded-2xl bg-white/5 border border-white/10 p-4 text-center backdrop-blur-md">
+                    <p className="text-[11px] text-slate-400">No New Notifications</p>
+                    <p className="text-[9px] text-slate-500 mt-1">Waiting for AI lead qualification...</p>
                   </div>
-                  <p className="text-xs font-bold text-white">VIP Executive AI Summary</p>
-                  <p className="text-[11px] text-slate-300">
-                    Sent to <strong>{leadEmail}</strong> with calendar confirmation & AI scope notes.
-                  </p>
-                </div>
+                ) : (
+                  <div className="space-y-2 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                    {/* iOS Notification 1: Calendar Appointment */}
+                    <div className="rounded-2xl bg-slate-900/80 border border-white/15 p-3 shadow-2xl backdrop-blur-xl space-y-1 transform transition-all">
+                      <div className="flex items-center justify-between text-[10px]">
+                        <div className="flex items-center gap-1.5 font-medium text-slate-300">
+                          <div className="h-4 w-4 rounded-md bg-rose-500 flex items-center justify-center text-white font-bold text-[9px] shadow-sm">
+                            <Calendar className="h-2.5 w-2.5" />
+                          </div>
+                          <span>CALENDAR</span>
+                        </div>
+                        <span className="text-[9px] text-slate-400">now</span>
+                      </div>
+                      <p className="text-xs font-bold text-white leading-tight">Meeting Booked: Discovery Call</p>
+                      <p className="text-[10px] text-slate-300 leading-snug">
+                        {leadName} (${leadBudget.toLocaleString()}) — Tomorrow at 10:00 AM
+                      </p>
+                    </div>
+
+                    {/* iOS Notification 2: Executive Mail Summary */}
+                    <div className="rounded-2xl bg-slate-900/80 border border-white/15 p-3 shadow-2xl backdrop-blur-xl space-y-1 transform transition-all">
+                      <div className="flex items-center justify-between text-[10px]">
+                        <div className="flex items-center gap-1.5 font-medium text-slate-300">
+                          <div className="h-4 w-4 rounded-md bg-blue-500 flex items-center justify-center text-white font-bold text-[9px] shadow-sm">
+                            <Mail className="h-2.5 w-2.5" />
+                          </div>
+                          <span>MAIL</span>
+                        </div>
+                        <span className="text-[9px] text-slate-400">now</span>
+                      </div>
+                      <p className="text-xs font-bold text-white leading-tight">VIP Executive AI Summary</p>
+                      <p className="text-[10px] text-slate-300 leading-snug">
+                        Dispatched to <strong>{leadEmail}</strong> with scope analysis & booking link.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
+            {/* iOS Home Indicator Bar */}
+            <div className="relative z-20 h-1 w-24 rounded-full bg-white/40 mx-auto mb-1" />
           </div>
         </div>
       </div>
