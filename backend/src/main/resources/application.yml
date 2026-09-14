@@ -5,13 +5,13 @@ spring:
   application:
     name: ai-lead-acceleration-engine
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5433/lead_engine}
-    username: ${DB_USERNAME:leadengine}
-    password: ${DB_PASSWORD:leadengine}
-    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:h2:mem:leadengine;DB_CLOSE_DELAY=-1;MODE=PostgreSQL}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
@@ -21,8 +21,7 @@ spring:
     show-sql: false
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
+      mode: never
 
 lead-engine:
   n8n:
