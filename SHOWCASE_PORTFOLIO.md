@@ -53,11 +53,21 @@ When pitching this platform to prospective clients, **never position it as a bas
 
 ---
 
-#### Scene 3: The Automated CRM Booking & Result (0:28 - 0:45)
-- **Visual:** Switch back to the portal displaying the live **QUALIFIED (Score: 92/100)** badge, followed by a simulated HubSpot/Slack notification popping up: *"VIP Lead Scheduled on Calendar"*.
-- **On-Screen Text Overlay:** `"10:00:04 AM — Lead Qualified & Pushed to Sales Calendar"`
+#### Scene 3: The 3D iPhone Popup — Instant Notifications (0:28 - 0:40)
+- **Visual:** A sleek 3D iPhone mockup pops up on screen showing 2 real-time iOS push notifications:
+  - 📅 **Calendar Notification:** `"Meeting Booked: Discovery Call with Acme Corp ($15,000 Budget) — Tomorrow @ 10:00 AM"`
+  - 📧 **Automated Email Notification:** `"VIP Confirmation & Executive AI Summary dispatched to prospect@acme.com"`
 - **Voiceover / Caption:**  
-  > *"High-value leads get instant calendar access, while unqualified submissions are filtered out. Zero manual SDR time required."*
+  > *"Within seconds, your prospect receives an automated VIP email response, while an executive call is auto-scheduled on your phone calendar..."*
+
+---
+
+#### Scene 4: PC Screen Zoom — Real-Time Google Sheets / CRM Sync (0:40 - 0:55)
+- **Visual:** Smooth cinematic camera zoom into a live Google Sheet / HubSpot CRM dashboard on the PC screen.
+- **Action:** A new row populates automatically with:
+  - `[ Name: Acme Corp ] | [ Budget: $15,000 ] | [ AI Score: 92/100 ] | [ Status: QUALIFIED ] | [ Meeting: Booked ]`
+- **Voiceover / Caption:**  
+  > *"Every lead is scored, logged, and synced to your CRM and Google Sheets in real-time. Zero manual data entry."*
 
 ---
 
