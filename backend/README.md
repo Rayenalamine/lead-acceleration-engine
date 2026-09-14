@@ -4,7 +4,7 @@ Spring Boot 3 REST API for async lead ingestion, PostgreSQL persistence, and non
 
 ## Prerequisites
 
-- JDK 17+
+- JDK 21+
 - Maven 3.9+
 - PostgreSQL 15+ (or use the root `docker-compose.yml`)
 
