@@ -12,8 +12,11 @@ When pitching this platform to prospective clients, **never position it as a bas
 
 ### Core Business Value Proposition
 - **Response Speed:** Instant qualification in **sub-second speed (< 1s)** (vs. industry average of 6–24 hours).
-- **Zero Waste:** Automatically filters out low-budget ($0–$2k) inquiries before they touch your sales calendar.
-- **Automated CRM Routing:** Pushes $10k+ enterprise leads straight to your account executives with full AI evaluation summaries.
+- **1-Click Executive Calendar Booking:** Qualified leads ($5k+ budget) are immediately presented with a live **Cal.com / Calendly 1-click slot picker** to book a discovery call on the spot.
+- **Automated Multi-Channel Dispatch:**
+  - **VIP Email Dispatch:** Prospect receives immediate email confirmation with AI summary.
+  - **CRM Deal Creation:** HubSpot / Salesforce deal automatically created with AI evaluation notes attached.
+  - **Self-Serve Nurturing:** Low-budget ($0-$2k) inquiries are redirected to automated self-service starter guides.
 
 ---
 
