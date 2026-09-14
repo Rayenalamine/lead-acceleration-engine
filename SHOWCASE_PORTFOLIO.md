@@ -11,7 +11,7 @@
 When pitching this platform to prospective clients, **never position it as a basic script or workflow tool**. Position it as a **Proprietary 4-Second AI Lead Qualification System** that replaces manual lead triaging and increases booked high-ticket sales calls by **300%**.
 
 ### Core Business Value Proposition
-- **Response Speed:** Instant qualification in **4 seconds** (vs. industry average of 6–24 hours).
+- **Response Speed:** Instant qualification in **sub-second speed (< 1s)** (vs. industry average of 6–24 hours).
 - **Zero Waste:** Automatically filters out low-budget ($0–$2k) inquiries before they touch your sales calendar.
 - **Automated CRM Routing:** Pushes $10k+ enterprise leads straight to your account executives with full AI evaluation summaries.
 

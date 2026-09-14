@@ -37,7 +37,7 @@ lead-engine:
   demo:
     # Set DEMO_MODE=false when running live n8n docker stack
     enabled: ${DEMO_MODE:true}
-    delay-ms: 4000
+    delay-ms: 800
 
 logging:
   level:

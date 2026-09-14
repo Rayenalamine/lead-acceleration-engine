@@ -3,8 +3,8 @@ import { fetchLead } from '../api/leads';
 import type { LeadDetail, LeadStatus } from '../types/lead';
 import { TERMINAL_STATUSES } from '../types/lead';
 
-const POLL_INTERVAL_MS = 2000;
-const MAX_POLLS = 90;
+const POLL_INTERVAL_MS = 500;
+const MAX_POLLS = 120;
 
 interface UseLeadPollingResult {
   lead: LeadDetail | null;
