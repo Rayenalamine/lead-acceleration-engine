@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { extractErrorMessage, submitLead } from './api/leads';
 import { Header } from './components/Header';
+import { InteractiveShowcase } from './components/InteractiveShowcase';
 import { ContactStep } from './components/LeadForm/ContactStep';
 import { ProgressBar } from './components/LeadForm/ProgressBar';
 import { ScopeStep } from './components/LeadForm/ScopeStep';
@@ -12,6 +13,7 @@ import { BUDGET_TIERS } from './types/lead';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState<'INTAKE' | 'SHOWCASE'>('INTAKE');
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -82,54 +84,58 @@ export default function App() {
   };
 
   return (
-    <div className="mx-auto min-h-screen max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <Header />
+    <div className="mx-auto min-h-screen max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+      <Header activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <main className="panel p-6 sm:p-8">
-        <ProgressBar currentStep={step} />
+      {activeTab === 'SHOWCASE' ? (
+        <InteractiveShowcase />
+      ) : (
+        <main className="panel p-6 sm:p-8">
+          <ProgressBar currentStep={step} />
 
-        {step === 1 && (
-          <ContactStep
-            fullName={fullName}
-            email={email}
-            companyName={companyName}
-            errors={errors}
-            onChange={(field, value) => {
-              if (field === 'fullName') setFullName(value);
-              if (field === 'email') setEmail(value);
-              if (field === 'companyName') setCompanyName(value);
-            }}
-            onNext={() => {
-              if (validateContact()) setStep(2);
-            }}
-          />
-        )}
+          {step === 1 && (
+            <ContactStep
+              fullName={fullName}
+              email={email}
+              companyName={companyName}
+              errors={errors}
+              onChange={(field, value) => {
+                if (field === 'fullName') setFullName(value);
+                if (field === 'email') setEmail(value);
+                if (field === 'companyName') setCompanyName(value);
+              }}
+              onNext={() => {
+                if (validateContact()) setStep(2);
+              }}
+            />
+          )}
 
-        {step === 2 && (
-          <ScopeStep
-            projectScope={projectScope}
-            budgetUsd={budgetUsd}
-            errors={errors}
-            onScopeChange={setProjectScope}
-            onBudgetChange={setBudgetUsd}
-            onBack={() => setStep(1)}
-            onNext={() => void handleSubmit()}
-          />
-        )}
+          {step === 2 && (
+            <ScopeStep
+              projectScope={projectScope}
+              budgetUsd={budgetUsd}
+              errors={errors}
+              onScopeChange={setProjectScope}
+              onBudgetChange={setBudgetUsd}
+              onBack={() => setStep(1)}
+              onNext={() => void handleSubmit()}
+            />
+          )}
 
-        {step === 3 && (
-          <StatusStep
-            isSubmitting={isSubmitting}
-            isPolling={isPolling}
-            lead={lead}
-            error={submitError ?? pollError}
-            onReset={handleReset}
-          />
-        )}
-      </main>
+          {step === 3 && (
+            <StatusStep
+              isSubmitting={isSubmitting}
+              isPolling={isPolling}
+              lead={lead}
+              error={submitError ?? pollError}
+              onReset={handleReset}
+            />
+          )}
+        </main>
+      )}
 
       <footer className="mt-8 text-center font-mono text-[11px] uppercase tracking-wider text-slate-600">
-        Phase 1–2 · Event-driven lead acceleration stack
+        Enterprise AI Lead Acceleration & Qualification Engine
       </footer>
     </div>
   );
