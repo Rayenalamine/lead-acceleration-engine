@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: lead-engine-postgres-prod
+    environment:
+      POSTGRES_DB: ${DB_NAME:-lead_engine}
+      POSTGRES_USER: ${DB_USERNAME:-leadengine}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-leadengine_prod_pass}
+    volumes:
+      - lead_postgres_data_prod:/var/lib/postgresql/data
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-leadengine} -d ${DB_NAME:-lead_engine}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: lead-engine-n8n-prod
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_WEBHOOK_URL=https://${DOMAIN_NAME:-localhost}/webhook/
+      - GENERIC_TIMEZONE=UTC
+      - N8N_SECURE_COOKIE=true
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - lead_n8n_data_prod:/home/node/.n8n
+    depends_on:
+      - postgres
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lead-engine-api-prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-lead_engine}
+      DB_USERNAME: ${DB_USERNAME:-leadengine}
+      DB_PASSWORD: ${DB_PASSWORD:-leadengine_prod_pass}
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/lead-qualify
+      CALLBACK_BASE_URL: http://backend:8081
+      DEMO_MODE: "false"
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: lead-engine-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - n8n
+    restart: always
+
+volumes:
+  lead_postgres_data_prod:
+  lead_n8n_data_prod:
