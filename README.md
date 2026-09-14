@@ -1,20 +1,45 @@
-# AI Lead Acceleration & Qualification Engine
+# Enterprise AI Lead Acceleration & Qualification Engine
 
-Enterprise event-driven stack for async lead ingestion, multi-tier LLM qualification, and real-time frontend status.
+An event-driven stack for async lead ingestion, semantic NLP qualification, and real-time CRM synchronization.
 
-## Phases
+## Architecture
 
-| Phase | Status | Stack |
-|---|---|---|
-| 1 Backend | **Implemented** | Spring Boot 3 · PostgreSQL · WebClient · JPA |
-| 2 Frontend | **Implemented** | Vite · React 18 · TypeScript · Tailwind |
-| 3 Automation | **Implemented** | n8n · OpenAI GPT-4o · CRM callback · Fallback rules |
-| 4 Infra | **Implemented** | `docker-compose.yml` (Postgres + n8n + API) · Dockerfile · Demo mode |
-| 5 Deploy | Planned | VPS · Nginx · SSL |
+This project is built using a decoupled microservices architecture:
+
+1. **Interactive Demo Engine (Frontend)**
+   - **Stack:** React 18 · TypeScript · Vite · Tailwind CSS
+   - **Description:** Contains a hyper-realistic, dynamic AI scoring simulation that runs purely in the browser. Perfect for live sales demos and client presentations without requiring backend deployment.
+
+2. **Core Production Engine (Backend)**
+   - **Stack:** Java 21 · Spring Boot 3 · PostgreSQL
+   - **Description:** An asynchronous event processor that securely handles lead intake, queues webhooks, and manages transactional data via JPA.
+
+3. **Automation Layer**
+   - **Stack:** n8n · OpenAI GPT-4o
+   - **Description:** A declarative workflow that receives webhooks from the Spring Boot API, scores intent and budget using GPT-4o, and fires alerts to Slack/CRM.
 
 ---
 
-## Environment Setup
+## 🚀 Quick Start (Interactive Frontend Demo)
+
+For sales pitches and client presentations, you only need to run the **Frontend Interactive Showcase**.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The portal will launch at `http://localhost:5173`. 
+*Note: This frontend can be deployed for free on Vercel or Netlify via direct GitHub integration.*
+
+---
+
+## 🛠️ Full Production Stack Deployment
+
+To run the complete end-to-end backend processing engine locally:
+
+### 1. Environment Setup
 
 Create a `.env` file at the project root (copy from `.env.example`):
 
@@ -28,69 +53,29 @@ Set your OpenAI API key in `.env` for live GPT-4o evaluation:
 OPENAI_API_KEY=sk-...
 ```
 
-**Note:** The `.env` file is git-ignored for security. See `.env.example` for required variables.
+### 2. Launch Docker Services
 
----
-
-## Quick start
-
-### 1. Database & n8n Automation Stack
+The repository includes a `docker-compose.yml` for automated infrastructure provisioning.
 
 ```bash
 docker compose up -d postgres n8n
 ```
 
-- PostgreSQL runs on host port **5433** (container port `5432`).
+- PostgreSQL runs on host port **5433**.
 - n8n Automation runs on host port **5678**.
 
-### 2. Import n8n Qualification Workflow (Optional for Live Mode)
-1. Open `http://localhost:5678` in your browser.
-2. Go to **Workflows** -> **Import from File**.
-3. Select `automation/n8n/workflows/lead_qualification_workflow.json`.
-4. Turn the workflow **Active** toggle **ON**.
-
-**Note:** For live n8n mode, you need your `OPENAI_API_KEY` set in `.env`. If omitted, n8n automatically runs deterministic rule-based qualification fallback.
-
-### 3. Run Full Docker Stack (Optional)
-
-For a fully containerized stack:
-
-```bash
-docker compose up -d
-```
-
-This starts:
-- PostgreSQL on port 5433
-- n8n on port 5678
-- Backend API on port 8081 (in live n8n mode)
-
-To run with demo mode (no n8n required), edit `docker-compose.yml` and set `DEMO_MODE: "true"` in the backend service environment.
-
-### 4. Backend API (Local Dev)
+### 3. Launch Spring Boot API
 
 ```bash
 cd backend
-..\.tools\apache-maven-3.9.6\bin\mvn.cmd spring-boot:run
+mvnw spring-boot:run
 ```
 
-API: `http://localhost:8081`
-
-- **Demo mode (`DEMO_MODE=true`)**: Simulated local qualification after ~4s without n8n.
-- **Live n8n mode (`DEMO_MODE=false`)**: Full async dispatch to n8n webhook, GPT-4o evaluation, CRM sync, and callback.
-
-### 5. Frontend Intake Portal
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Portal: `http://localhost:5173`
+The REST API will be available at `http://localhost:8081`. 
 
 ---
 
-## API Contract
+## 📖 API Contract Reference
 
 ### `POST /api/v1/leads` → `202 Accepted`
 
@@ -99,7 +84,7 @@ Portal: `http://localhost:5173`
   "fullName": "Alex Rivera",
   "email": "alex@acme.io",
   "companyName": "Acme Systems",
-  "budgetUsd": 12500,
+  "budgetUsd": 15000,
   "projectScope": "Automate inbound lead scoring and sync to HubSpot within 60 seconds."
 }
 ```
@@ -114,33 +99,15 @@ Response:
 }
 ```
 
-### `GET /api/v1/leads/{id}`
-
-Returns full lead detail including `qualificationScore` and `status` for polling.
-
-### `PUT /api/v1/leads/{id}/qualification`
-
-n8n callback endpoint:
-
-```json
-{
-  "status": "QUALIFIED",
-  "qualificationScore": 87
-}
-```
-
 ---
 
-## Project Layout
+## Project Topology
 
 ```
 /automation
-  /n8n
-    /workflows
-      lead_qualification_workflow.json  Production n8n workflow definition
-/backend                                 Spring Boot 3 API (Java 21)
-/frontend                                React 18 intake portal
-docker-compose.yml                       Full local stack orchestration
-.env.example                             Environment variables template
-/backend/Dockerfile                      Production container build
+  /n8n/workflows/lead_qualification_workflow.json  (Production n8n workflow definition)
+/backend                                           (Spring Boot 3 API)
+/frontend                                          (React 18 intake portal & interactive demo)
+docker-compose.yml                                 (Local infrastructure mesh)
 ```
+
